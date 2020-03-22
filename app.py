@@ -74,7 +74,7 @@ def delete_redis():
     profile_id = request.form.get("profile_id")
 
     # get data from cache
-    data_profile = cache.get(key=KEY_CACHE + "_" + profile_id)
+    data_profile = cache.get(key=KEY_CACHE + "_" + profile_id, return_type=str)
     
     if data_profile:
         dict_cache_profile = json.loads(data_profile)
@@ -87,7 +87,7 @@ def delete_redis():
 
     response = {
         "status": 200,
-        "username": data_profile["username"],
+        "username": dict_cache_profile["username"],
         "message": "Berhasil menghapus profile dari cache"
     }
 
