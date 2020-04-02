@@ -9,7 +9,6 @@ import logging
 from cache import cache
 
 app_instance = Flask(__name__)
-app_instance.make_null_session()
 
 log = logging.getLogger(__name__)
 
@@ -51,8 +50,9 @@ def input_redis():
     return jsonify(response)
 
 
-app_instance.route("/get_redis/<str:profile_id>")
+@app_instance.route("/get_redis/<int:profile_id>")
 def get_redis(profile_id):
+    """
     # get from cache
     data_profile = cache.get(key=KEY_CACHE + "_" + profile_id, return_type=str)
 
@@ -65,11 +65,15 @@ def get_redis(profile_id):
         "status": 200 if dict_cache_profile else 204,
         "result": dict_cache_profile
     }
+    """
+    response = {
+        "message": "Return get redis"
+    }
 
     return jsonify(response)
 
 
-app_instance.route("/delete_redis", methods=["POST"])
+@app_instance.route("/delete_redis", methods=["POST"])
 def delete_redis():
     profile_id = request.form.get("profile_id")
 
@@ -94,7 +98,7 @@ def delete_redis():
     return jsonify(response)
 
 
-app_instance.route("/update_redis", methods=["POST"])
+@app_instance.route("/update_redis", methods=["POST"])
 def update_redis():
     profile_id = request.form.get("profile_id")
     username = request.form.get("username")
@@ -136,4 +140,5 @@ def update_redis():
     return jsonify(response)
 
 
-app_instance.run(host="127.0.0.1", port=5000, debug=True)
+if __name__ == "__main__":
+    app_instance.run(host="127.0.0.1", port=5000, debug=True)
